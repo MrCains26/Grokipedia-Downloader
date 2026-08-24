@@ -7,6 +7,8 @@
 
 Grokipedia Downloader is a small, Python toolkit for downloading articles from [Grokipedia](https://grokipedia.com) and converting them into Markdown files. It can scrape a **single article**, or **follow every hyperlink** inside an article to download and preserve the entire web of connected pages as a self‑contained, Locally stored navigable library.
 
+#### **Designed For Archival Use**
+
 ---
 
 ## Features
