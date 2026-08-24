@@ -181,7 +181,7 @@ To change the output location, add `-o mylibrary/` to any Download command.
 
 ## ⚠️ A Note on Responsible Scraping
 
-- Always respect [`grokipedia.com/robots.txt`](https://grokipedia.com/robots.txt). ()
+- Always respect [`grokipedia.com/robots.txt`](https://grokipedia.com/robots.txt).
 - Use `--delay` to avoid overwhelming the server.
 - Review Grokipedia's **Terms of Service** before bulk or commercial use.
 - This tool is intended for personal research, offline reading, and archival.
