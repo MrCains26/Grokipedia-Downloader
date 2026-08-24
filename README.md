@@ -152,14 +152,15 @@ By default, a complete mirror folder is created next to where you run the scrape
 
 ```
 grokipedia_downloader/
-├── README.md               # Master index + per‑page link list (your entry point)
-├── PAGE-NAME.md            # The start page(url page), with local links
-├── pages/
-│   ├── AnotherPage.md      # linked articles, with local links
-│   └── ...
-└── html/
-    ├── PAGE-NAME.html      # Raw HTML copy of every page
-    └── ...
+|__ grokipedia_mirror           # Folder to hold all downloaded pages and files
+    ├── README.md               # Master index + per‑page link list (your entry point)
+    ├── PAGE-NAME.md            # The start page(url page), with local links
+    ├── pages/
+    │   ├── AnotherPage.md      # linked articles, with local links
+    │   └── ...
+    └── html/
+        ├── PAGE-NAME.html      # Raw HTML copy of every page
+        └── ...
 ```
 
 > 🧭 **Start by opening `README.md`** in the output folder — it contains a clickable index of every downloaded page plus a per‑page map of the links found within each article, so you can navigate the whole library offline.
