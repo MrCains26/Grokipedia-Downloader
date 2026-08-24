@@ -1,7 +1,7 @@
 
 ---
 
-# 📘 Grokipedia Downloader
+# Grokipedia Downloader
 
 **Turn any Grokipedia article into a Markdown file — or a complete local library of the entire connected graph.**
 
@@ -9,12 +9,12 @@ Grokipedia Downloader is a small, Python toolkit for downloading articles from [
 
 ---
 
-## ✨ Features
+## Features
 
 - 📄 **Markdown conversion** — headings, paragraphs, ordered/unordered lists, links, images, blockquotes, and code blocks all converted faithfully.
 - 🔗 **Hyperlink following** — automatically discovers and downloads every linked article, preserving links so the whole library navigates offline.
 - 🌐 **Full library scraping** — recursively connected articles, building a complete local mirror.
-- 🖥️ **JavaScript‑aware** — a Playwright‑powered fetcher renders client‑side pages so you get real content, not empty shells.
+- 🖥️ **JavaScript** — a Playwright‑powered fetcher renders client‑side pages so you get real content, not empty shells.
 - 🗂️ **Dual output** — every page is saved as both clean Markdown **and** raw HTML.
 - 📍 **Local Path rewriting** — internal links are rewritten to relative local paths, so the entire library works offline.
 - ⚙️ **Configurable** — configurable download delays, depth limits, and page caps keep scrapes controlled and respectful.
@@ -22,7 +22,7 @@ Grokipedia Downloader is a small, Python toolkit for downloading articles from [
 
 ---
 
-## 🎯 What it does
+## What it does
 
 Grokipedia Downloader comes as **three focused tools**:
 
@@ -34,7 +34,7 @@ Grokipedia Downloader comes as **three focused tools**:
 
 ---
 
-## 📥 Download/Install
+## Download/Install
 
 Clone the Repository:
 ```bash
@@ -111,7 +111,7 @@ py -m pip install -r playwright        (windows)
 
 
 
-## 🐚 Commands & What They Do
+## Commands & What They Do
 
 
 
@@ -196,12 +196,12 @@ Sitemap: https://assets.grokipedia.com/sitemap/sitemap-index.xml
 
 ---
 
-## 📦 Requirements
+## Requirements
 
 - Python 3.9+
 - `requests`, `beautifulsoup4`, `lxml`, `playwright` + Chromium (core)
 
-See `requirements.txt` for exact versions.
+All are in `requirements.txt`.
 
 ---
 
