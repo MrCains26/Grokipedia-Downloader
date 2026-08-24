@@ -26,12 +26,9 @@ Grokipedia Downloader is a small, Python toolkit for downloading articles from [
 
 ## What it does
 
-Grokipedia Downloader comes as **three focused tools**:
-
 | Tool | Purpose |
 |------|---------|
-| **Scraper** | Scrapes one Grokipedia article and exports it to a single Markdown file. |
-| **Scraper(Recursive)** | Follows every hyperlink inside an article, downloading the entire connected web of articles into a local, offline‑navigable mirror. |
+| **Scraper** | Can scrape one Grokipedia article and export it to a Markdown file. Can also follow every hyperlink inside an article, downloading the entire connected web of articles into a local, offline‑navigable mirror. |
 | **Playwright Fallback** | Renders JavaScript‑heavy pages so articles that only appear after page load can still be scraped. |
 
 ---
@@ -111,17 +108,24 @@ py -m pip install -r playwright        (windows)
 
 ---
 
-
-
 ## Bash Commands
 
+| Flag | Default | Description |
+|------|---------|-------------|
+| `-o`, `--output-dir` | `grokipedia_downloader` | Folder to save the library mirror. |
+| `--max-pages` | `30` | Maximum number of pages to download. |
+| `--max-depth` | `4` | Maximum number of link hops from the start page. |
+| `--delay` | `0.5` | Seconds to wait between downloads. |
+| `--match` | *(none)* | Only follow links whose text contains this phrase. |
+| `--no-html` | off | Skip saving raw `.html` copies. |
 
+---
 
-### Recursive Scraper (full library)
+## Examples
 
 | Command | What it does |
 |---------|--------------|
-| `python grokipedia_scraper.py "url"` | Crawls every linked article from the page (defaults: up to 30 pages, depth 4). |
+| `python grokipedia_scraper.py "url"` | Crawls every linked article from the page (defaults: up to 30 pages). |
 | `python grokipedia_scraper.py "url" --max-depth 0`| Saves ONLY the url page. |
 | `python grokipedia_scraper.py "url" --max-depth 1`| Saves url page and direct links. |
 | `python grokipedia_scraper.py "url" --match "keyword"` | Crawls only links whose anchor text contains the word `keyword`. |
@@ -161,21 +165,6 @@ grokipedia_downloader/
 > 🧭 **Start by opening `README.md`** in the output folder — it contains a clickable index of every downloaded page plus a per‑page map of the links found within each article, so you can navigate the whole library offline.
 
 To change the output location, add `-o mylibrary/` to any Download command.
-
----
-
-## ⚙️ Options Reference
-
-### Recursive Scraper
-
-| Flag | Default | Description |
-|------|---------|-------------|
-| `-o`, `--output-dir` | `grokipedia_downloader` | Folder to save the library mirror. |
-| `--max-pages` | `30` | Maximum number of pages to download. |
-| `--max-depth` | `4` | Maximum number of link hops from the start page. |
-| `--delay` | `0.5` | Seconds to wait between downloads. |
-| `--match` | *(none)* | Only follow links whose text contains this phrase. |
-| `--no-html` | off | Skip saving raw `.html` copies. |
 
 ---
 
