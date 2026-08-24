@@ -204,9 +204,3 @@ Sitemap: https://assets.grokipedia.com/sitemap/sitemap-index.xml
 - `requests`, `beautifulsoup4`, `lxml`, `playwright` + Chromium (core)
 
 All are in `requirements.txt`.
-
----
-
-*Built for offline reading and personal knowledge archives.*
-
----
