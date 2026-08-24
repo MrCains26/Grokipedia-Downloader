@@ -1,51 +1,4 @@
 #!/usr/bin/env python3
-"""
-Grokipedia Crawler / Scraper
-============================
-Scrape a Grokipedia page and RECURSIVELY follow the hyperlinks inside the
-article, downloading each linked page so you end up with a fully local,
-offline-friendly mirror.
-
-Output tree (default in ./grokipedia_mirror/):
-
-    grokipedia_mirror/
-    ├── README.md              # master index + per-page link lists
-    ├── Hitomila.md            # the start page (rewritten local links)
-    ├── pages/
-    │   ├── Another_Term.md    # a linked page (rewritten local links)
-    │   └── ...
-    └── html/
-        ├── Hitomila.html      # raw HTML copies of every page
-        └── ...
-
-Dependencies:
-    pip install requests beautifulsoup4 lxml
-
-For JS-rendered (client-side) pages - recommended for accurate content:
-    pip install playwright
-    playwright install chromium
-
-Usage:
-    # Crawl everything linked from a page (renders each page via browser)
-    python grokipedia_crawler.py "https://grokipedia.com/page/Hitomila"
-
-    # Only follow links whose anchor text contains a word/phrase
-    python grokipedia_crawler.py "https://grokipedia.com/page/Hitomila" \
-        --match "Hitomila" --max-pages 25
-
-    # Force the fast requests-based fetcher (faster, but content may be empty)
-    python grokipedia_crawler.py "https://grokipedia.com/page/Hitomila" --static
-
-    # Options
-    python grokipedia_crawler.py URL \
-        -o mirror/            # output dir
-        --max-pages 50        # max pages to download
-        --max-depth 4         # max link hops from start
-        --match "phrase"      # only follow links whose text contains this
-        --no-html             # skip raw .html copies
-        --delay 1.0           # seconds between requests (be polite)
-        --static              # use requests instead of a real browser
-"""
 
 import argparse
 import os
@@ -59,7 +12,7 @@ from urllib.parse import urljoin, urlsplit, unquote, urlparse
 import requests
 from bs4 import BeautifulSoup, Comment, NavigableString
 
-# Use the built-in parser so no extra library (lxml) is required.
+# lxml parser
 PARSER = "html.parser"
 
 BASE_HOSTS = {"grokipedia.com", "www.grokipedia.com"}
@@ -80,9 +33,8 @@ CONTENT_SELECTORS = [
 ]
 
 
-# --------------------------------------------------------------------------- #
-# Fetching
-# --------------------------------------------------------------------------- #
+# Page Fetching
+
 def fetch(url: str, timeout: int = 30):
     """Static fetch via requests. Returns (html, soup)."""
     headers = {"User-Agent": USER_AGENT, "Accept-Language": "en-US,en;q=0.9"}
@@ -144,9 +96,8 @@ def get_title(soup: BeautifulSoup) -> str:
     return "Grokipedia Article"
 
 
-# --------------------------------------------------------------------------- #
 # URL / slug helpers
-# --------------------------------------------------------------------------- #
+
 def slugify_path(path: str):
     m = re.search(r"^/page/(.+?)(?:/|\?|$)", path)
     if not m:
@@ -188,9 +139,8 @@ def make_resolver(current_url: str, prefix: str):
     return resolve
 
 
-# --------------------------------------------------------------------------- #
 # Link extraction
-# --------------------------------------------------------------------------- #
+
 def _safe_join(base, href):
     """urljoin that never raises on weird/empty hrefs."""
     if not href or not href.strip():
@@ -247,9 +197,8 @@ def _add_from_href(container, abs_url):
     container[abs_url] = (slug, abs_url, "")
 
 
-# --------------------------------------------------------------------------- #
-# MD conversion (recursive)
-# --------------------------------------------------------------------------- #
+# Markdown conversion (recursive)
+
 def render_list(list_el, ordered: bool, base_indent: str) -> str:
     lines = []
     marker_fmt = "%d." if ordered else "-"
@@ -342,9 +291,8 @@ def element_to_md(element, resolve_href=None) -> str:
     return " ".join(parts)
 
 
-# --------------------------------------------------------------------------- #
 # Crawler
-# --------------------------------------------------------------------------- #
+
 class GrokipediaCrawler:
     def __init__(self, start_url, output_dir, max_pages=30, max_depth=4,
                  delay=0.5, match=None, include_html=True, use_render=True):
@@ -394,7 +342,7 @@ class GrokipediaCrawler:
             links = internal_links(soup, url, match=self.match_phrase)
             link_slugs = {s for s, _, _ in links}
 
-            # Diagnostic: shows how many links were found per page.
+            # Diagnostic: how many links found per page.
             print(f"[debug] {url} -> {len(links)} internal link(s) found",
                   file=sys.stderr)
 
@@ -433,7 +381,7 @@ class GrokipediaCrawler:
         os.makedirs(html_dir, exist_ok=True)
         os.makedirs(pages_dir, exist_ok=True)
 
-        # raw HTML copies
+        # HTML copies
         for data in self.pages.values():
             if not self.include_html:
                 break
