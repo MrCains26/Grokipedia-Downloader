@@ -111,7 +111,7 @@ py -m pip install -r playwright        (windows)
 
 
 
-## Commands & What They Do
+## Bash Commands
 
 
 
