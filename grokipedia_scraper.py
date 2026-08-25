@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import math
 import os
 import re
 import sys
@@ -12,7 +13,7 @@ from urllib.parse import urljoin, urlsplit, unquote, urlparse
 import requests
 from bs4 import BeautifulSoup, Comment, NavigableString
 
-# lxml parser
+# lxml parser 
 PARSER = "html.parser"
 
 BASE_HOSTS = {"grokipedia.com", "www.grokipedia.com"}
@@ -33,7 +34,7 @@ CONTENT_SELECTORS = [
 ]
 
 
-# Page Fetching
+# Fetching pages
 
 def fetch(url: str, timeout: int = 30):
     """Static fetch via requests. Returns (html, soup)."""
@@ -166,7 +167,7 @@ def internal_links(soup, current_url, match=None):
         if joined:
             _add_from_href(found, joined)
 
-    # 2) From embedded JSON payloads in <script> tags (client-rendered pages)
+    # 2) From embedded JSON payloads in <script> tags (client-rendered)
     for script in soup.find_all("script"):
         text = script.string or ""
         for m in re.finditer(r"/page/([^\"'\\)<>\s]+)", text):
@@ -197,7 +198,8 @@ def _add_from_href(container, abs_url):
     container[abs_url] = (slug, abs_url, "")
 
 
-# Markdown conversion (recursive)
+
+# MD conversion (recursive)
 
 def render_list(list_el, ordered: bool, base_indent: str) -> str:
     lines = []
@@ -291,19 +293,26 @@ def element_to_md(element, resolve_href=None) -> str:
     return " ".join(parts)
 
 
+
 # Crawler
 
 class GrokipediaCrawler:
     def __init__(self, start_url, output_dir, max_pages=30, max_depth=4,
-                 delay=0.5, match=None, include_html=True, use_render=True):
+                 delay=0.5, match=None, include_html=True, use_render=True,
+                 no_limit=False):
         self.start_url = start_url if start_url.startswith("http") else "https://" + start_url
         self.output_dir = output_dir
-        self.max_pages = max_pages
-        self.max_depth = max_depth
         self.delay = delay
         self.match_phrase = match
         self.include_html = include_html
         self.use_render = use_render
+
+        if no_limit:
+            self.max_pages = math.inf
+            self.max_depth = math.inf
+        else:
+            self.max_pages = max_pages
+            self.max_depth = max_depth
 
         self.pages = {}      # canonical_url -> meta dict
         self.link_index = {} # slug -> set(linked slugs)
@@ -342,7 +351,7 @@ class GrokipediaCrawler:
             links = internal_links(soup, url, match=self.match_phrase)
             link_slugs = {s for s, _, _ in links}
 
-            # Diagnostic: how many links found per page.
+            # Diagnostics, links were found per page.
             print(f"[debug] {url} -> {len(links)} internal link(s) found",
                   file=sys.stderr)
 
@@ -440,8 +449,10 @@ def main():
         description="Crawl a Grokipedia page to local Markdown.")
     ap.add_argument("url", help="Grokipedia page URL (or bare slug like 'Hitomila')")
     ap.add_argument("-o", "--output-dir", default="grokipedia_mirror")
-    ap.add_argument("--max-pages", type=int, default=30)
-    ap.add_argument("--max-depth", type=int, default=4)
+    ap.add_argument("--max-pages", type=int, default=30,
+                    help="maximum number of pages to download (default 30)")
+    ap.add_argument("--max-depth", type=int, default=4,
+                    help="maximum link hops from the start page (default 4)")
     ap.add_argument("--delay", type=float, default=0.5,
                     help="seconds to wait between requests")
     ap.add_argument("--match", default=None,
@@ -451,6 +462,9 @@ def main():
     ap.add_argument("--static", action="store_true",
                     help="use the fast requests fetcher instead of a browser "
                          "(faster, but page content may be empty on JS-rendered sites)")
+    ap.add_argument("--no-limit", action="store_true",
+                    help="remove --max-pages and --max-depth; crawl until there "
+                         "are no more pages to download")
     args = ap.parse_args()
 
     crawler = GrokipediaCrawler(
@@ -462,7 +476,11 @@ def main():
         match=args.match,
         include_html=not args.no_html,
         use_render=not args.static,
+        no_limit=args.no_limit,
     )
+    if args.no_limit:
+        print("[note] --no-limit enabled: crawling until all reachable pages are downloaded.",
+              file=sys.stderr)
     crawler.crawl()
     n = crawler.build()
     print(f"[done] Crawled {n} page(s) -> {os.path.abspath(args.output_dir)}")
