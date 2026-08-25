@@ -42,11 +42,10 @@ cd grokipedia_downloader
 ```
 Download Dependencies:
 ```bash
-pip install -r requirements.txt
-```
-**Or**:
-```bash
-python -m pip install -r requirements.txt
+pip install requests
+pip install beautifulsoup4
+pip install lxml
+pip install playwright
 ```
 Install Headless Chromium for Playwrite:
 ```bash
@@ -63,7 +62,6 @@ playwright install chromium
 Requests:
 
 ```bash
-pip install requests
 python -m pip install requests
 pip3 install requests
 python3 -m pip install requests
@@ -74,7 +72,6 @@ py -m pip install -r requests        (windows)
 Beautifulsoup4:
 
 ```bash
-pip install beautifulsoup4
 python -m pip install beautifulsoup4
 pip3 install beautifulsoup4
 python3 -m pip install beautifulsoup4
@@ -85,7 +82,6 @@ py -m pip install -r beautifulsoup4        (windows)
 lxml:
 
 ```bash
-pip install lxml
 python -m pip install lxml
 pip3 install lxml
 python3 -m pip install lxml
@@ -96,7 +92,6 @@ py -m pip install -r lxml        (windows)
 Playwright:
 
 ```bash
-pip install playwright
 python -m pip install playwright
 pip3 install playwright
 python3 -m pip install playwright
@@ -115,6 +110,7 @@ py -m pip install -r playwright        (windows)
 | `-o`, `--output-dir` | `grokipedia_downloader` | Folder to save the library mirror. |
 | `--max-pages` | `30` | Maximum number of pages to download. |
 | `--max-depth` | `4` | Maximum number of link hops from the start page. |
+| `--no-limit` | *(none)* | Remove page and depth limits. |
 | `--delay` | `0.5` | Seconds to wait between downloads. |
 | `--match` | *(none)* | Only follow links whose text contains this phrase. |
 | `--no-html` | off | Skip saving raw `.html` copies. |
@@ -128,6 +124,7 @@ py -m pip install -r playwright        (windows)
 | `python grokipedia_scraper.py "url"` | Crawls every linked article from the page (defaults: up to 30 pages). |
 | `python grokipedia_scraper.py "url" --max-depth 0`| Saves ONLY the url page. |
 | `python grokipedia_scraper.py "url" --max-depth 1`| Saves url page and direct links. |
+| `python grokipedia_scraper.py "url" --no-limit --delay 1`| Saves every page that is hyperlinked to the url(recursive) with 1 second delay |
 | `python grokipedia_scraper.py "url" --match "keyword"` | Crawls only links whose anchor text contains the word `keyword`. |
 | `python grokipedia_scraper.py "url" --max-pages 100 --max-depth 6` | Crawls up to 100 pages, up to 6 link hops deep. |
 | `python grokipedia_scraper.py "url" --delay 2 --no-html` | Crawls with a 2‑second delay between requests and skips saving raw HTML. |
@@ -187,10 +184,3 @@ Sitemap: https://assets.grokipedia.com/sitemap/sitemap-index.xml
 ```
 
 ---
-
-## Requirements
-
-- Python 3.9+
-- `requests`, `beautifulsoup4`, `lxml`, `playwright` + Chromium (core)
-
-All are in `requirements.txt`.
