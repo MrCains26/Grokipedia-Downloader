@@ -51,6 +51,13 @@ Install Headless Chromium for Playwrite:
 ```bash
 playwright install chromium
 ```
+
+Due to the nature of the code, you will have to run the commands in the path/folder that contains the python script
+
+(EX: ```C:\user\parent_folder\grokipedia-downloader\```)
+
+Then run the command like this: ``` C:\user\parent_folder\grokipedia-downloader\> grokipedia_scraper.py "URL" --delay ```
+
 <br>
 <details>
 <summary>Still Missing Dependencies?</summary>
